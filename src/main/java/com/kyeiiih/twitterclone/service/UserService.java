@@ -20,6 +20,13 @@ public class UserService {
 
     public User createUser(UserRegistrationDTO userRegistrationDTO) {
 
+        User byUsername = userRepository
+                .findByUsername(userRegistrationDTO.getUsername());
+
+        if (byUsername != null){
+           throw new IllegalArgumentException("Username is already taken");
+        }
+
         User user = new User();
         user.setUsername(userRegistrationDTO.getUsername());
         user.setPassword(userRegistrationDTO.getPassword());

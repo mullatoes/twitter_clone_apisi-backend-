@@ -1,5 +1,6 @@
 package com.kyeiiih.twitterclone.controller;
 
+import com.kyeiiih.twitterclone.dto.TweetDTO;
 import com.kyeiiih.twitterclone.models.Tweet;
 import com.kyeiiih.twitterclone.service.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ public class TweetController {
     }
 
     @PostMapping
-    public Tweet createTweet(@RequestBody Tweet tweet) {
-        return tweetService.createTweet(tweet);
+    public Tweet createTweet(@RequestBody TweetDTO tweetDTO) {
+        return tweetService.createTweet(tweetDTO);
     }
 
     @GetMapping("/{tweetId}")
