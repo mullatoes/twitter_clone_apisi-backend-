@@ -1,5 +1,6 @@
 package com.kyeiiih.twitterclone.service;
 
+import com.kyeiiih.twitterclone.dto.UserLoginDTO;
 import com.kyeiiih.twitterclone.dto.UserRegistrationDTO;
 import com.kyeiiih.twitterclone.models.Tweet;
 import com.kyeiiih.twitterclone.models.User;
@@ -23,8 +24,8 @@ public class UserService {
         User byUsername = userRepository
                 .findByUsername(userRegistrationDTO.getUsername());
 
-        if (byUsername != null){
-           throw new IllegalArgumentException("Username is already taken");
+        if (byUsername != null) {
+            throw new IllegalArgumentException("Username is already taken");
         }
 
         User user = new User();
@@ -60,5 +61,15 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public User loginUser(UserLoginDTO userLoginDTO) {
+        User user = userRepository.findByUsername(userLoginDTO.getUsername());
+
+        if (user != null && user.getPassword().equals(userLoginDTO.getPassword())) {
+            return user;
+        }
+
+        return null;
     }
 }

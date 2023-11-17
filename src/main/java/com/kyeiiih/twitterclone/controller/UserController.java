@@ -1,10 +1,14 @@
 package com.kyeiiih.twitterclone.controller;
 
+import com.kyeiiih.twitterclone.dto.UserLoginDTO;
 import com.kyeiiih.twitterclone.dto.UserRegistrationDTO;
 import com.kyeiiih.twitterclone.models.Tweet;
 import com.kyeiiih.twitterclone.models.User;
+import com.kyeiiih.twitterclone.repository.UserRepository;
 import com.kyeiiih.twitterclone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,13 +17,15 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public User createUser(@RequestBody UserRegistrationDTO userRegistrationDTO) {
         return userService.createUser(userRegistrationDTO);
     }
@@ -48,4 +54,16 @@ public class UserController {
     public List<User> getAllUsers(){
         return userService.getAllUsers();
     }
+
+    @GetMapping("/login")
+    public ResponseEntity<String> loginUser(UserLoginDTO userLoginDTO) {
+        User user = userRepository.findByUsername(userLoginDTO.getUsername());
+
+        if (user != null && user.getPassword().equals(userLoginDTO.getPassword())) {
+            return ResponseEntity.status(HttpStatus.OK).body("Authentication successful");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
+        }
+    }
+
 }

@@ -4,6 +4,8 @@ import com.kyeiiih.twitterclone.dto.TweetDTO;
 import com.kyeiiih.twitterclone.models.Tweet;
 import com.kyeiiih.twitterclone.service.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +22,13 @@ public class TweetController {
     }
 
     @PostMapping
-    public Tweet createTweet(@RequestBody TweetDTO tweetDTO) {
-        return tweetService.createTweet(tweetDTO);
+    public ResponseEntity<?> createTweet(@RequestBody TweetDTO tweetDTO) {
+        try {
+            Tweet tweet = tweetService.createTweet(tweetDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(tweet);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @GetMapping("/{tweetId}")
