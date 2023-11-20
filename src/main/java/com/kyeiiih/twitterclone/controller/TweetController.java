@@ -40,4 +40,9 @@ public class TweetController {
     public List<Tweet> getUserTweets(@PathVariable Long userId) {
         return tweetService.getUserTweets(userId);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllTweets() {
+        return ResponseEntity.status(HttpStatus.OK).body(tweetService.getAllTweets());
+    }
 }

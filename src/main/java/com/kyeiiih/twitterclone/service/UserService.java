@@ -2,7 +2,6 @@ package com.kyeiiih.twitterclone.service;
 
 import com.kyeiiih.twitterclone.dto.UserLoginDTO;
 import com.kyeiiih.twitterclone.dto.UserRegistrationDTO;
-import com.kyeiiih.twitterclone.models.Tweet;
 import com.kyeiiih.twitterclone.models.User;
 import com.kyeiiih.twitterclone.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,9 @@ public class UserService {
         User user = new User();
         user.setUsername(userRegistrationDTO.getUsername());
         user.setPassword(userRegistrationDTO.getPassword());
-        user.setTweets(Collections.emptyList());
+        user.setFollowers(Collections.emptyList());
+        user.setDisplayName(userRegistrationDTO.getDisplayName());
+        user.setLikedTweets(Collections.emptyList());
         return userRepository.save(user);
     }
 
@@ -47,12 +48,6 @@ public class UserService {
         return userRepository.findByUsername(query);
     }
 
-    public List<Tweet> getUserTweets(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " does not exist"));
-
-        return user.getTweets();
-    }
 
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
@@ -71,5 +66,19 @@ public class UserService {
         }
 
         return null;
+    }
+
+    public User updateUserDetails(Long userId, UserRegistrationDTO updatedUserDTO) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+        existingUser.setUsername(updatedUserDTO.getUsername());
+        existingUser.setPassword(updatedUserDTO.getPassword());
+        existingUser.setBio(updatedUserDTO.getBio());
+        existingUser.setLocation(updatedUserDTO.getLocation());
+        existingUser.setDisplayName(updatedUserDTO.getDisplayName());
+        existingUser.setProfilePictureUrl(updatedUserDTO.getProfilePictureUrl());
+        existingUser.setWebsite(updatedUserDTO.getWebsite());
+
+        return userRepository.save(existingUser);
     }
 }

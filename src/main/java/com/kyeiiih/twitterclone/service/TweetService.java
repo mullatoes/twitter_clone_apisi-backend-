@@ -34,6 +34,7 @@ public class TweetService {
         tweet.setContent(tweetDTO.getContent());
         tweet.setComments(Collections.emptyList());
         tweet.setUser(user);
+
         return tweetRepository.save(tweet);
     }
 
@@ -46,6 +47,11 @@ public class TweetService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User id " + userId + " does not exist"));
 
-        return user.getTweets();
+        return Collections.EMPTY_LIST;
+
+    }
+
+    public List<Tweet> getAllTweets() {
+        return tweetRepository.findAll();
     }
 }

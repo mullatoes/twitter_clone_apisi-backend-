@@ -19,7 +19,30 @@ public class User {
     private String username;
     private String password;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Tweet> tweets;
+    private String displayName;
+    private String bio;
+    private String location;
+    private String website;
+    private String profilePictureUrl;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_followers",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id"))
+    private List<User> followers;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_following",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id"))
+    private List<User> following;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_likes",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "tweet_id"))
+    private List<Tweet> likedTweets;
 }

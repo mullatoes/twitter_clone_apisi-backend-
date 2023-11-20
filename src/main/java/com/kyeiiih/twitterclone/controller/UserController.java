@@ -40,18 +40,14 @@ public class UserController {
         return userService.searchUser(query);
     }
 
-    @GetMapping("/{userId}/tweets")
-    public List<Tweet> getUserTweets(@PathVariable Long userId) {
-        return userService.getUserTweets(userId);
-    }
 
     @GetMapping("/{userId}")
-    public User getUserById(@PathVariable Long userId){
+    public User getUserById(@PathVariable Long userId) {
         return userService.getUserById(userId);
     }
 
     @GetMapping("/users")
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
@@ -64,6 +60,12 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
         }
+    }
+
+    @PutMapping("/updateUser/{userId}")
+    public ResponseEntity<?> updateUserDetails(@PathVariable Long userId, @RequestBody UserRegistrationDTO updatedUserDTO) {
+        User savedUser = userService.updateUserDetails(userId, updatedUserDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(savedUser);
     }
 
 }
